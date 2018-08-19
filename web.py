@@ -1,8 +1,9 @@
 import tornado.ioloop
 import tornado.web
+import os
 
-import logic
-from base import Backend, RequestHandler
+import private.logic as logic
+from private.base import Backend, RequestHandler
 
 
 class QueryHandler(RequestHandler):
@@ -27,21 +28,22 @@ class InitHandler(RequestHandler):
         solutions = logic.solve(cells)
         self.application.backend._set_cache(cells_hash, {"solutions": solutions}, expiry=1440)
 
-
 class Application(tornado.web.Application):
 
-    def __init__(self):
+    def __init__(self, path):
         self.backend = Backend.instance()
         tornado.web.Application.__init__(self, [
             (r"/init", InitHandler),
             (r"/solutions", QueryHandler),
+            (r'/(.*\..*)', tornado.web.StaticFileHandler, {'path': path})
         ],
         autoreload=True)
 
 
 def main():
     logic.tests()
-    app = Application()
+    path = os.path.join(os.getcwd(), 'public')
+    app = Application(path)
     app.listen(8888)
     Backend.instance().clean_cache(60)
     tornado.ioloop.IOLoop.instance().start()

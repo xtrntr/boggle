@@ -20,7 +20,26 @@ Backend will have 1 API that can be used to query for all the words and valid se
 
 2) Solving a boggle board can be slow. Current approach is using DFS to generate all permutations of valid sequences on the grid while using a trie to terminate useless searches. One way to mitigate this is to return the randomized grid and a hash of the grid to the frontend straightaway, then the frontend can use the grid to query the backend for the solutions later on
 
-## Developer notes:
+# Developer notes:
+
+## Deployment
+
+No setting of env variables needed.
+
+```
+virtualenv --python=python3 venv
+. venv/bin/activate
+pip install -r requirements.txt
+
+python3 web.py
+```
+
+## Background
+
+Boggle is a word game that is played on a 4x4 board with 16 letter tiles. 
+The goal is to find as many words as possible given a time constraint.
+For this exercise, we are making one modification.  Now it is possible for one or more of the letter tiles to be blank (denoted by *).
+When a tile is blank, it can be treated as any other letter.  Note that in one game it does not have to be the same character for each word.
 
 Cells are arranged like so on the grid:
 
